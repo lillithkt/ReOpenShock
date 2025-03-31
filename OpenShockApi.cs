@@ -67,8 +67,8 @@ public class OpenShockApi
     {
         var handler = new HttpClientHandler
         {
-            Proxy = new WebProxy("http://localhost:9000"),
-            UseProxy = true
+            // Proxy = new WebProxy("http://localhost:9000"),
+            // UseProxy = true
         };
         _httpClient = new HttpClient(handler)
         {
