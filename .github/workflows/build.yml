@@ -1,10 +1,28 @@
-﻿name: Build
+﻿name: Publish
 
-on: [push]
+on:
+  release:
+    types: [published]
 
 jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get clean version
+        run: |
+          echo cleanVersion=$(echo ${{github.ref_name}} | sed s/v//g) >> $GITHUB_ENV
+      - name: Check that version matches
+        run: |
+          if [[ "$(grep -Po "\d+\.\d+\.\d+" $(find ./ -name thunderstore/manifest.json))" != "${{ env.cleanVersion }}" ]]; then
+            echo "::debug::${{env.cleanVersion}}"
+            echo "::debug::$(cat $(find ./ -name thunderstore/manifest.json ))"
+            echo "::error::Version in manifest.json does not match tag version"
+            exit 1
+          fi
   build:
     runs-on: ubuntu-latest
+    needs: verify
     steps:
       - uses: actions/checkout@v4
       - name: Setup dotnet
@@ -17,8 +35,20 @@ jobs:
         run: dotnet build --no-restore
       - name: Move Package to Thunderstore dir
         run: mv obj/Debug/netstandard2.1/ReOpenShock.dll thunderstore/ReOpenShock.dll
-      - name: Upload Thunderstore mod
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Thunderstore Mod
           path: thunderstore
+      - uses: GreenTF/upload-thunderstore-package@v4.3
+        with:
+          namespace: lillithkt # the thunderstore 'team' to publish under
+          description: Shocks you when you die!
+          token: ${{ secrets.THUNDERSTORE_TOKEN }}
+          name: ReOpenShock # the name of the package
+          version: ${{ github.ref_name }} # Use the tag as the package version
+          community: repo
+          path: thunderstore
+          categories: | # <-- notice this pipe character
+            clientside
+            misc

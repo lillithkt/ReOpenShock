@@ -21,7 +21,7 @@ public enum ControlType
 public class ControlRequest
 {
     public IEnumerable<Control> Shocks { get; set; } = null!;
-    public string? CustomName { get; set; }
+    public string CustomName { get; set; }
 }
 
 public class Control

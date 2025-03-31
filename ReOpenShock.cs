@@ -14,7 +14,7 @@ namespace ReOpenShock
     {
         public const string PluginGuid = "gay.lilyy.ReOpenShock";
         public const string PluginName = "ReOpenShock";
-        public const string PluginVersion = "1.0.0";
+        public const string PluginVersion = "1.0.1";
 
         private static new ManualLogSource Logger;
 
