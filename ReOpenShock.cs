@@ -21,7 +21,8 @@ namespace ReOpenShock
         private static ConfigEntry<string> domain;
         private static ConfigEntry<string> apiKey;
         private static ConfigEntry<bool> shockOnDeath;
-        private static ConfigEntry<byte> shockStrength;
+        private static ConfigEntry<int> shockStrength;
+        private static ConfigEntry<float> shockDuration;
         private static ConfigEntry<bool> vibrateOnDamage;
 
         private static OpenShockApi client;
@@ -49,11 +50,16 @@ namespace ReOpenShock
                 "Shock On Death",
                 true,
                 "Do you want to be shocked on death?");
-            shockStrength = Config.Bind<byte>(
+            shockStrength = Config.Bind(
                 "General",
                 "Shock Strength",
                 20,
-                new ConfigDescription("", new AcceptableValueRange<byte>(0, 100)));
+                new ConfigDescription("", new AcceptableValueRange<int>(0, 100)));
+            shockDuration = Config.Bind(
+                "General",
+                "Shock Duration",
+                0.3f,
+                new ConfigDescription("", new AcceptableValueRange<float>(0.3f, 30)));
             vibrateOnDamage = Config.Bind(
                 "General",
                 "Vibrate On Damage",
@@ -81,7 +87,7 @@ namespace ReOpenShock
                 actions.Add(new Control
                 {
                     Id = device,
-                    Duration = 300,
+                    Duration = (int)(shockDuration.Value * 1000),
                     Intensity = shockStrength.Value,
                     Type = action
                 });

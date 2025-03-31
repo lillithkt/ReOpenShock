@@ -28,8 +28,8 @@ public class Control
 {
     public string Id { get; set; }
     public ControlType Type { get; set; }
-    public byte Intensity { get; set; }
-    public ushort Duration { get; set; }
+    public int Intensity { get; set; }
+    public int Duration { get; set; }
 }
 
 public class DevicesRes
@@ -67,8 +67,8 @@ public class OpenShockApi
     {
         var handler = new HttpClientHandler
         {
-            // Proxy = new WebProxy("http://localhost:9000"),
-            // UseProxy = true
+            Proxy = new WebProxy("http://localhost:9000"),
+            UseProxy = true
         };
         _httpClient = new HttpClient(handler)
         {
