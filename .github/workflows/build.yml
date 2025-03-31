@@ -48,6 +48,7 @@ jobs:
           name: ReOpenShock # the name of the package
           version: ${{ github.ref_name }} # Use the tag as the package version
           community: repo
+          repo: thunderstore.io
           path: thunderstore
           categories: | # <-- notice this pipe character
             clientside
