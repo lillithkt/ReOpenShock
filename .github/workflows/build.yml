@@ -14,9 +14,9 @@ jobs:
           echo cleanVersion=$(echo ${{github.ref_name}} | sed s/v//g) >> $GITHUB_ENV
       - name: Check that version matches
         run: |
-          if [[ "$(grep -Po "\d+\.\d+\.\d+" $(find ./ -name thunderstore/manifest.json))" != "${{ env.cleanVersion }}" ]]; then
+          if [[ "$(grep -Po "\d+\.\d+\.\d+" thunderstore/manifest.json)" != "${{ env.cleanVersion }}" ]]; then
             echo "::debug::${{env.cleanVersion}}"
-            echo "::debug::$(cat $(find ./ -name thunderstore/manifest.json ))"
+            echo "::debug::$(cat thunderstore/manifest.json )"
             echo "::error::Version in manifest.json does not match tag version"
             exit 1
           fi
