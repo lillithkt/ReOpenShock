@@ -1,4 +1,4 @@
-﻿# ReOpenShock
+# ReOpenShock
 
 Shocks you when you die!
 
