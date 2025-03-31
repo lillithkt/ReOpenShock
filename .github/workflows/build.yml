@@ -34,7 +34,9 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
       - name: Move Package to Thunderstore dir
-        run: mv obj/Debug/netstandard2.1/ReOpenShock.dll thunderstore/ReOpenShock.dll
+        run: |
+          mv obj/Debug/netstandard2.1/ReOpenShock.dll thunderstore/ReOpenShock.dll
+          zip Thunderstore\ Mod.zip ./thunderstore/*
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -53,3 +55,11 @@ jobs:
           categories: | # <-- notice this pipe character
             clientside
             misc
+      - name: Edit Release
+        uses: irongut/EditRelease@v1.2.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          id: ${{ github.event.release.id }}
+          draft: false
+          files: "Thunderstore Mod.zip"
+          body: "\nThis is published on [Thunderstore](https://thunderstore.io/c/repo/p/lillithkt/ReOpenShock/)"
