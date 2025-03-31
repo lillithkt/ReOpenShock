@@ -15,8 +15,10 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore
-      - name: Upload dll
+      - name: Move Package to Thunderstore dir
+        run: mv obj/Debug/netstandard2.1/ReOpenShock.dll thunderstore/ReOpenShock.dll
+      - name: Upload Thunderstore mod
         uses: actions/upload-artifact@v4
         with:
-          name: ReOpenShock.dll
-          path: obj/Debug/netstandard2.1/ReOpenShock.dll
+          name: Thunderstore Mod
+          path: thunderstore
