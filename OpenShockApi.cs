@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using BepInEx.Logging;
-using ExitGames.Client.Photon.StructWrapping;
 using Newtonsoft.Json;
-using ReOpenShock;
 using Sirenix.Utilities;
 
 namespace ReOpenShock;
+
 public enum ControlType
 {
     Stop = 0,
@@ -18,6 +16,7 @@ public enum ControlType
     Vibrate = 2,
     Sound = 3
 }
+
 public class ControlRequest
 {
     public IEnumerable<Control> Shocks { get; set; } = null!;
@@ -56,13 +55,13 @@ public class Shocker
     public string model { get; set; }
 }
 
-
-
 public class OpenShockApi
 {
     private static readonly ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource("OpenShockApi");
     private readonly HttpClient _httpClient;
-    
+
+    public ImmutableList<string> devices = new([]);
+
     public OpenShockApi(string apiToken, Uri server)
     {
         var handler = new HttpClientHandler
@@ -90,13 +89,12 @@ public class OpenShockApi
             }), Encoding.UTF8, "application/json")
         };
         var response = await _httpClient.SendAsync(requestMessage);
-        
-        if (!response.IsSuccessStatusCode) Logger.LogError($"Failed to send control request to OpenShock API [{response.StatusCode}]");
+
+        if (!response.IsSuccessStatusCode)
+            Logger.LogError($"Failed to send control request to OpenShock API [{response.StatusCode}]");
         else Logger.LogInfo("Successfully sent control request");
     }
 
-    public ImmutableList<string> devices = new([]);
-    
     public async Task GetDevices()
     {
         Logger.LogInfo("Sending get devices request to OpenShock API");
@@ -111,13 +109,9 @@ public class OpenShockApi
         var resCl = JsonConvert.DeserializeObject<DevicesRes>(await response.Content.ReadAsStringAsync());
         List<string> shockerIds = [];
         foreach (var hub in resCl.data)
-        {
-            foreach (var shocker in hub.shockers)
-            {
-                shockerIds.Add(shocker.id);
-            }
-        }
-        
+        foreach (var shocker in hub.shockers)
+            shockerIds.Add(shocker.id);
+
 
         devices = shockerIds.ToImmutableList();
 
