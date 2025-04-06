@@ -13,7 +13,7 @@ public class ReOpenShock : BaseUnityPlugin
 {
     public const string PluginGuid = "gay.lilyy.ReOpenShock";
     public const string PluginName = "ReOpenShock";
-    public const string PluginVersion = "1.0.3";
+    public const string PluginVersion = "1.0.4";
     public static ReOpenShock Instance;
 
 

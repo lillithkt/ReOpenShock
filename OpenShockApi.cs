@@ -97,6 +97,11 @@ public class OpenShockApi
 
     public async Task GetDevices()
     {
+        if (ModConfig.OpenShockAPIKey.Value == (string)ModConfig.OpenShockAPIKey.DefaultValue)
+        {
+            devices = new ImmutableList<string>([]);
+            return;
+        }
         Logger.LogInfo("Sending get devices request to OpenShock API");
         var requestMessage = new HttpRequestMessage(HttpMethod.Get, "/1/shockers/own");
         var response = await _httpClient.SendAsync(requestMessage);
