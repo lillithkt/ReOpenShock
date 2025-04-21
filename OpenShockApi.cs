@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using BepInEx.Logging;
+using ExitGames.Client.Photon.StructWrapping;
 using Newtonsoft.Json;
 using Sirenix.Utilities;
 
@@ -77,8 +79,12 @@ public class OpenShockApi
         _httpClient.DefaultRequestHeaders.Add("OpenShockToken", apiToken);
     }
 
-    public async Task Control(IEnumerable<Control> shocks)
+    public async Task Control(List<Control> shocks)
     {
+        if (shocks.Count == 0)
+        {
+            return;
+        }
         Logger.LogInfo("Sending control request to OpenShock API");
         var requestMessage = new HttpRequestMessage(HttpMethod.Post, "/2/shockers/control")
         {
@@ -90,8 +96,9 @@ public class OpenShockApi
         };
         var response = await _httpClient.SendAsync(requestMessage);
 
-        if (!response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode) {
             Logger.LogError($"Failed to send control request to OpenShock API [{response.StatusCode}]");
+            }
         else Logger.LogInfo("Successfully sent control request");
     }
 

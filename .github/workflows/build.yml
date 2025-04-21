@@ -63,12 +63,3 @@ jobs:
         with:
           body: "\nThis is published on [Thunderstore](https://thunderstore.io/c/repo/p/lillithkt/ReOpenShock/)"
           is_append_body: true
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
-        with:
-          upload_url: ${{ steps.update_release.outputs.upload_url }}
-          asset_path: ./Thunderstore\ Mod.zip
-          asset_name: Thunderstore Mod.zip
-          asset_content_type: application/octet-stream
